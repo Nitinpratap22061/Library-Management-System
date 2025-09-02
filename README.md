@@ -1,4 +1,4 @@
-# DBMS Project Management System
+# Complete Library Management System 
 
 ## Overview
 This is a full-stack web application built with the MERN stack (MongoDB, Express.js, React.js, Node.js) for managing database management system projects.
