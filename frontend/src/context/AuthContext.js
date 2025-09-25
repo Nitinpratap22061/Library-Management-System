@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const loadUser = async () => {
     try {
       console.log('Loading user profile...');
-      const res = await axios.get('http://localhost:5000/api/auth/profile');
+      const res = await axios.get('https://library-management-systems-pw6b.onrender.com/api/auth/profile');
       console.log('User profile loaded:', res.data);
       setUser(res.data);
       setIsAuthenticated(true);
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       console.log('Registering user:', userData.email);
-      await axios.post('http://localhost:5000/api/auth/register', userData);
+      await axios.post('https://library-management-systems-pw6b.onrender.com/api/auth/register', userData);
       return { success: true };
     } catch (err) {
       console.error('Registration error:', err);
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData) => {
     try {
       console.log('Logging in user:', userData.email);
-      const res = await axios.post('http://localhost:5000/api/auth/login', userData);
+      const res = await axios.post('https://library-management-systems-pw6b.onrender.com/api/auth/login', userData);
       
       console.log('Login successful, setting token');
       localStorage.setItem('token', res.data.token);
