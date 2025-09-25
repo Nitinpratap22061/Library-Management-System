@@ -17,25 +17,37 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Health check route
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "📚 Library Management API is running" });
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/requests", requestRoutes);
 
-// Serve static files from the React app when in production
+// ✅ Serve React only if build exists
 if (process.env.NODE_ENV === "production") {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, "client/build")));
+  const clientBuildPath = path.join(__dirname, "client/build");
 
-  // Any request that's not to the API will be redirected to the React app
+  app.use(express.static(clientBuildPath));
+
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(404).json({ error: "API route not found" });
+    }
+    res.sendFile(path.join(clientBuildPath, "index.html"), (err) => {
+      if (err) {
+        res.status(500).send("React build not found. Did you build the client?");
+      }
+    });
   });
 } else {
   // Base route for development
   app.get("/", (req, res) => {
-    res.send("📚 Library Management API is running...");
+    res.send("📚 Library Management API is running in development...");
   });
 }
 
