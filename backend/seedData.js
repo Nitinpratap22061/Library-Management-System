@@ -53,8 +53,8 @@ const books = [
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@example.com',
-    password: bcrypt.hashSync('password123', 10),
+    email: 'admin@gmail.com',
+    password: bcrypt.hashSync('123456', 10),
     role: 'admin'
   },
   {
