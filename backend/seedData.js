@@ -1,3 +1,4 @@
+// seed.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
@@ -18,49 +19,25 @@ mongoose
 
 // Sample data
 const books = [
-  {
-    title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
-    description: 'A classic novel about racial injustice in the American South',
-    quantity: 5
-  },
-  {
-    title: '1984',
-    author: 'George Orwell',
-    description: 'A dystopian social science fiction novel',
-    quantity: 3
-  },
-  {
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    description: 'A novel about the Jazz Age in America',
-    quantity: 2
-  },
-  {
-    title: 'Pride and Prejudice',
-    author: 'Jane Austen',
-    description: 'A romantic novel of manners',
-    quantity: 4
-  },
-  {
-    title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
-    description: 'A fantasy novel and children\'s book',
-    quantity: 3
-  }
+  { title: 'To Kill a Mockingbird', author: 'Harper Lee', description: 'A classic novel about racial injustice in the American South', quantity: 5 },
+  { title: '1984', author: 'George Orwell', description: 'A dystopian social science fiction novel', quantity: 3 },
+  { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', description: 'A novel about the Jazz Age in America', quantity: 2 },
+  { title: 'Pride and Prejudice', author: 'Jane Austen', description: 'A romantic novel of manners', quantity: 4 },
+  { title: 'The Hobbit', author: 'J.R.R. Tolkien', description: "A fantasy novel and children's book", quantity: 3 }
 ];
 
+// NOTE: keep plain-text passwords here only for seeding/testing. Change in production.
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@gmail.com',
-    password: bcrypt.hashSync('123456', 10),
+    email: 'admin@gmail.com',            // <= use this to login: admin@gmail.com
+    password: bcrypt.hashSync('123456', 10), // <= password is: 123456
     role: 'admin'
   },
   {
     name: 'Student User',
-    email: 'student@example.com',
-    password: bcrypt.hashSync('password123', 10),
+    email: 'student@example.com',        // <= use this to login: student@example.com
+    password: bcrypt.hashSync('password123', 10), // <= password is: password123
     role: 'student'
   }
 ];
@@ -68,7 +45,7 @@ const users = [
 // Seed function
 const seedData = async () => {
   try {
-    // Clear existing data
+    // Clear existing data (CAUTION: don't run on production DB)
     await Book.deleteMany();
     await User.deleteMany();
 
@@ -80,10 +57,13 @@ const seedData = async () => {
     console.log(`${createdUsers.length} users created`);
     
     console.log('\nSample User Credentials:');
-    console.log('Admin: admin@example.com / password123');
-    console.log('Student: student@example.com / password123');
+    console.log(`Admin: ${users[0].email} / 123456`);
+    console.log(`Student: ${users[1].email} / password123`);
     
-    mongoose.disconnect();
+    // print inserted emails for verification
+    console.log('\nInserted user emails:', createdUsers.map(u => u.email).join(', '));
+    
+    await mongoose.disconnect();
     console.log('Database seeded successfully');
   } catch (error) {
     console.error('Error seeding data:', error);
@@ -91,4 +71,4 @@ const seedData = async () => {
   }
 };
 
-seedData(); 
+seedData();
