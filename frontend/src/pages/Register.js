@@ -6,10 +6,6 @@ import {
   Button, 
   Box, 
   Paper, 
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Alert,
   Link as MuiLink
 } from '@mui/material';
@@ -22,7 +18,6 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'student'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,11 +56,12 @@ const Register = () => {
     setError('');
     
     try {
+      // force role = student
       const result = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: formData.role
+        role: "student"
       });
       
       if (result.success) {
@@ -144,20 +140,7 @@ const Register = () => {
             onChange={handleChange}
           />
           
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role"
-              name="role"
-              value={formData.role}
-              label="Role"
-              onChange={handleChange}
-            >
-              <MenuItem value="student">Student</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
-            </Select>
-          </FormControl>
+          {/* Role field removed, automatically student */}
           
           <Button
             type="submit"
@@ -183,4 +166,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;
