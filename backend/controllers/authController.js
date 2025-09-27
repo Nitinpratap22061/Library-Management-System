@@ -12,35 +12,57 @@ mongoose
   .then(() => console.log("✅ MongoDB connected in authController"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// REGISTER
+
+// ================== REGISTER ==================
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser)
+      return res.status(400).json({ message: "User already exists" });
 
+    // ✅ Always hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    // force role = student always
-    await User.create({ name, email, password: hashedPassword, role: "student" });
 
-    res.status(201).json({ success: true, message: "User registered successfully" });
+    await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role: "student", // force student role
+    });
+
+    res
+      .status(201)
+      .json({ success: true, message: "User registered successfully" });
   } catch (err) {
     console.error("❌ Register error:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-// LOGIN
+
+// ================== LOGIN ==================
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user)
+      return res.status(400).json({ message: "Invalid credentials" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    let isMatch = false;
 
-    // ✅ Hardcoded JWT secret instead of process.env
+    if (user.password.startsWith("$2b$")) {
+      // ✅ Case 1: Stored password is already hashed
+      isMatch = await bcrypt.compare(password, user.password);
+    } else {
+      // ✅ Case 2: Stored password is plain text
+      isMatch = password === user.password;
+    }
+
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    // ✅ Hardcoded JWT secret
     const token = jwt.sign(
       { id: user._id, role: user.role },
       "supersecretjwtkey",
@@ -58,7 +80,8 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// GET PROFILE
+
+// ================== GET PROFILE ==================
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
