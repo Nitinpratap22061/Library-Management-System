@@ -30,14 +30,14 @@ const books = [
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@gmail.com',            // <= use this to login: admin@gmail.com
-    password: bcrypt.hashSync('123456', 10), // <= password is: 123456
+    email: 'a@gmail.com',                       // <= admin email set to a@gmail.com
+    password: bcrypt.hashSync('123', 10),       // <= admin password is: 123 (hashed)
     role: 'admin'
   },
   {
     name: 'Student User',
-    email: 'student@example.com',        // <= use this to login: student@example.com
-    password: bcrypt.hashSync('password123', 10), // <= password is: password123
+    email: 'student@example.com',               // <= student email unchanged
+    password: bcrypt.hashSync('password123', 10), // <= student password: password123
     role: 'student'
   }
 ];
@@ -57,7 +57,7 @@ const seedData = async () => {
     console.log(`${createdUsers.length} users created`);
     
     console.log('\nSample User Credentials:');
-    console.log(`Admin: ${users[0].email} / 123456`);
+    console.log(`Admin: ${users[0].email} / 123`);
     console.log(`Student: ${users[1].email} / password123`);
     
     // print inserted emails for verification
