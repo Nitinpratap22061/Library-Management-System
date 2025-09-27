@@ -1,5 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
@@ -8,8 +7,6 @@ const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const issueRoutes = require("./routes/issueRoutes");
 const requestRoutes = require("./routes/requestRoutes");
-
-dotenv.config();
 
 const app = express();
 
@@ -51,16 +48,19 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Connect DB and Start Server
+// ✅ Direct MongoDB connection string (no .env)
 mongoose
-  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/library-management", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://nitin_profile:u0fsQiDwbpN5jcN1@cluster0.cubeffp.mongodb.net/nitin_profile?retryWrites=true&w=majority&appName=Cluster0",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log("✅ MongoDB connected");
 
-    const PORT = process.env.PORT || 5000;
+    const PORT = 5000; // fixed port
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
