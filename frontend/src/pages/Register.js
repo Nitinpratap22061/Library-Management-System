@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { 
-  Container, 
-  Typography, 
-  TextField, 
-  Button, 
-  Box, 
-  Paper, 
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper,
   Alert,
   Link as MuiLink
 } from '@mui/material';
@@ -17,7 +17,7 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,43 +33,38 @@ const Register = () => {
       setError('All fields are required');
       return false;
     }
-    
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return false;
     }
-    
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
       return false;
     }
-    
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
-      // force role = student
       const result = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: "student"
+        role: 'student' // forced role
       });
-      
+
       if (result.success) {
         navigate('/login', { state: { message: 'Registration successful! Please login.' } });
       } else {
         setError(result.message);
       }
-    } catch (err) {
+    } catch {
       setError('Registration failed. Please try again.');
     } finally {
       setLoading(false);
@@ -82,13 +77,9 @@ const Register = () => {
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Register
         </Typography>
-        
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        
+
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
             margin="normal"
@@ -102,7 +93,7 @@ const Register = () => {
             value={formData.name}
             onChange={handleChange}
           />
-          
+
           <TextField
             margin="normal"
             required
@@ -114,7 +105,7 @@ const Register = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          
+
           <TextField
             margin="normal"
             required
@@ -127,7 +118,7 @@ const Register = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          
+
           <TextField
             margin="normal"
             required
@@ -139,9 +130,7 @@ const Register = () => {
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-          
-          {/* Role field removed, automatically student */}
-          
+
           <Button
             type="submit"
             fullWidth
@@ -151,7 +140,7 @@ const Register = () => {
           >
             {loading ? 'Registering...' : 'Register'}
           </Button>
-          
+
           <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography variant="body2">
               Already have an account?{' '}
@@ -166,6 +155,4 @@ const Register = () => {
   );
 };
 
-
-
-
+export default Register;
